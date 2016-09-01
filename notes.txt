@@ -1,0 +1,198 @@
+Software Dependencies
+- Node: a JavaScript runtime
+- npm: Node Package Manager
+- Grunt-CLI: command-line interface to run Grunt
+- Grunt: the actual task runner
+- Grunt plugins: 4000 to chose from
+--------------------------------------
+
+High Level Overview
+1. Install node.js
+2. Install grunt-cli
+3. Create package.json file
+4. Install grunt
+5. Install plugins
+6. Create gruntfile.js file
+--------------------------------------
+
+About Grunt Node Packages
+
+There are two Grunt node packages:
+
+1. "grunt-cli" is installed one time for the entire system (-g)
+npm install -g grunt-cli
+
+2. "grunt" is installed for each project in the project directory
+npm install grunt 
+--------------------------------------
+
+After npm init Create gruntfile.js in project's main directory
+
+What does it do?
+- Configures tasks
+- Loads plugins
+- Registers tasks
+
+
+The gruntfile.js skeleton:
+
+module.exports = function(grunt){
+  // Configure task(s)
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'), 
+  });
+  
+  // Load the plugins
+  grunt.loadNpmTasks();
+
+  // Register task(s)
+  grunt.registerTask('default',[ ]);
+};
+--------------------------------------
+
+Steps to Adding a Task
+
+1. Load the plugin
+npm install <plugin-name> --save-dev
+2. Add configuration to gruntfile.js
+3. Load plugin in gruntfile.js
+4. Register the task in gruntfile.js
+--------------------------------------
+
+------- Uglify your JavaScript
+--------------------------------------
+ 
+- Install uglify
+npm install grunt-contrib-uglify --save-dev 
+  
+  // Configure task(s)
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'), 
+    uglify: {
+       build: {
+          src: 'src/to/js/files/*.js',
+          dest: 'destination/mainfolder/script.min.js'
+       }
+    } 
+  });
+
+
+  // Load the plugins
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  // Register task(s)
+  grunt.registerTask('default',['uglify:build']);
+--------------------------------------
+
+Run it!
+grunt
+--------------------------------------
+
+Creat a building task: gruntfile.js
+
+grunt.registerTask('default',['uglify:build']);
+grunt.registerTask('build',['uglify:build']);
+--------------------------------------
+
+Create DEV Tasks
+Don't minify code, but do concatenate files
+
+// add after build{},
+dev: {
+   options: {
+      beautify: true,
+      mangle: false,
+      compress: false,
+      preserveComments: 'all'      
+   },
+   src: 'src/to/js/files/*.js',
+   dest: 'destination/mainfolder/script.min.js'
+}
+--------------------------------------
+
+------- Install Watch
+--------------------------------------
+
+npm install grunt-contrib-watch --save-dev
+
+watch : {
+   js: {
+      files: ['src/js/*.js'],
+      tasks: ['uglify:dev']
+   }
+}
+
+
+// Load the plugin
+grunt.loadNpmTasks('grunt-contrib-watch');
+--------------------------------------
+
+------- Install Grunt Sass
+--------------------------------------
+npm install grunt-sass --save-dev
+
+grunt-contrib-sass requires Ruby
+
+@AdelineYaw:
+grunt-sass is a lot faster, but missing Sass 3.1-3.3 stuff
+
+@AdelineYaw:
+grunt-contrib-sass uses the official slow Sass which is in Ruby. grunt-sass uses libsass which is in C++.
+--------------------------------------
+
+Configure: gruntfile.js
+
+sass: {
+  dev: {
+    options: {
+      outputStyle: 'expanded'
+    },
+    files: {
+        'path/to/destination/style.css' : 'path/to/file.scss'
+    }
+  }
+}
+
+// Load the plugin
+grunt.loadNpmTasks('grunt-sass');
+
+// Register task(s)
+grunt.registerTask('default',['uglify:dev','sass:dev']);
+--------------------------------------
+
+Add to watch: gruntfile.js
+
+watch : {
+   js: {
+      files: ['src/js/*.js'],
+      tasks: ['uglify:dev']
+   },
+   css: {
+      files: ['src/scss/**/*.scss'],
+      tasks: ['sass:dev']
+   }
+}
+--------------------------------------
+
+Add Sass Build Task: gruntfile.js
+
+build: {
+   options : {
+      outputStyle: 'compressed'
+   },
+   files : {
+      'css/style.css' : 'src/scss/application.scss'
+   }
+}
+
+grunt.registerTask('build',['uglify:build','sass:build']);
+--------------------------------------
+--------------------------------------
+--------------------------------------
+
+
+[!] watch can: live reload + chrome extenion
+
+ 
+
+
